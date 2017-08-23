@@ -9,17 +9,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 const core_1 = require('@angular/core');
-const proposal_1 = require('./proposal');
+const router_1 = require('@angular/router');
+const Rx_1 = require('rxjs/Rx');
+const proposal_service_1 = require('./proposal.service');
 let ProposalListComponent = class ProposalListComponent {
-    constructor() {
-        this.propsalOne = new proposal_1.Proposal(15, 'ABC Company', 'http://portfolio.jordanhudgens.com', 'Ruby on Rails', 150, 120, 15, 'jordan@devcamp.com');
-        this.propsalTwo = new proposal_1.Proposal(99, 'XYZ Company', 'http://portfolio.jordanhudgens.com', 'Ruby on Rails', 150, 120, 15, 'jordan@devcamp.com');
-        this.propsalThree = new proposal_1.Proposal(300, 'Something Company', 'http://portfolio.jordanhudgens.com', 'Ruby on Rails', 150, 120, 15, 'jordan@devcamp.com');
-        this.proposals = [
-            this.propsalOne,
-            this.propsalTwo,
-            this.propsalThree,
-        ];
+    constructor(proposalService, router) {
+        this.proposalService = proposalService;
+        this.router = router;
+        this.mode = "Observable";
+    }
+    ngOnInit() {
+        let timer = Rx_1.Observable.timer(0, 5000);
+        timer.subscribe(() => this.getProposals());
+    }
+    getProposals() {
+        this.proposalService.getProposals()
+            .subscribe(proposals => this.proposals = proposals, error => this.errorMessage = error);
+    }
+    goToShow(proposal) {
+        let link = ['/proposal', proposal.id];
+        this.router.navigate(link);
     }
 };
 ProposalListComponent = __decorate([
@@ -27,9 +36,10 @@ ProposalListComponent = __decorate([
         moduleId: module.id,
         selector: 'proposal-list',
         templateUrl: 'proposal-list.component.html',
-        styleUrls: ['proposal-list.component.css']
+        styleUrls: ['proposal-list.component.css'],
+        providers: [proposal_service_1.ProposalService]
     }), 
-    __metadata('design:paramtypes', [])
+    __metadata('design:paramtypes', [proposal_service_1.ProposalService, router_1.Router])
 ], ProposalListComponent);
 exports.ProposalListComponent = ProposalListComponent;
 //# sourceMappingURL=proposal-list.component.js.map
