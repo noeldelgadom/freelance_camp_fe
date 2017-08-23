@@ -9,32 +9,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 const core_1 = require('@angular/core');
+const Rx_1 = require('rxjs/Rx');
+const document_service_1 = require('./document.service');
 let DocumentsComponent = class DocumentsComponent {
-    constructor() {
+    constructor(documentService) {
+        this.documentService = documentService;
         this.pageTitle = "Document Dashboard";
-        this.documents = [
-            {
-                title: "My first doc",
-                description: "some description",
-                file_url: "http://google.com",
-                updated_at: "11/11/16",
-                image_url: "https://i.pinimg.com/736x/5f/45/64/5f4564f571798e4dfd78312cdab3b85e--surf-board-surfs.jpg"
-            },
-            {
-                title: "My second doc",
-                description: "some description",
-                file_url: "http://google.com",
-                updated_at: "11/11/16",
-                image_url: "https://i.pinimg.com/736x/5f/45/64/5f4564f571798e4dfd78312cdab3b85e--surf-board-surfs.jpg"
-            },
-            {
-                title: "My last doc",
-                description: "some description",
-                file_url: "http://google.com",
-                updated_at: "11/11/16",
-                image_url: "https://i.pinimg.com/736x/5f/45/64/5f4564f571798e4dfd78312cdab3b85e--surf-board-surfs.jpg"
-            },
-        ];
+        this.mode = "Observable";
+    }
+    ngOnInit() {
+        let timer = Rx_1.Observable.timer(0, 5000);
+        timer.subscribe(() => this.getDocuments());
+    }
+    getDocuments() {
+        this.documentService.getDocuments()
+            .subscribe(documents => this.documents = documents, error => this.errorMessage = error);
     }
 };
 DocumentsComponent = __decorate([
@@ -42,9 +31,10 @@ DocumentsComponent = __decorate([
         moduleId: module.id,
         selector: 'documents',
         templateUrl: 'documents.component.html',
-        styleUrls: ['documents.component.css']
+        styleUrls: ['documents.component.css'],
+        providers: [document_service_1.DocumentService]
     }), 
-    __metadata('design:paramtypes', [])
+    __metadata('design:paramtypes', [document_service_1.DocumentService])
 ], DocumentsComponent);
 exports.DocumentsComponent = DocumentsComponent;
 //# sourceMappingURL=documents.component.js.map
